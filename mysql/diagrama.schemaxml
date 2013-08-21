@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8" collation="utf8_swedish_ci">sistemabancario</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="agencia" view="colnames">
+<left>93</left>
+<top>107</top>
+<width>147</width>
+<height>107</height>
+<sql_create_table>CREATE TABLE `agencia` (
+  `AgenciaCodigo` smallint(4) NOT NULL,
+  `AgenciaDescricao` varchar(30) COLLATE utf8_swedish_ci NOT NULL,
+  PRIMARY KEY (`AgenciaCodigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci</sql_create_table>
+</table>
+<table name="cliente" view="colnames">
+<left>620</left>
+<top>103</top>
+<width>126</width>
+<height>107</height>
+<sql_create_table>CREATE TABLE `cliente` (
+  `ClienteCodigo` smallint(4) NOT NULL,
+  `ClienteNome` varchar(50) COLLATE utf8_swedish_ci NOT NULL,
+  PRIMARY KEY (`ClienteCodigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci</sql_create_table>
+</table>
+<table name="conta" view="colnames">
+<left>360</left>
+<top>73</top>
+<width>131</width>
+<height>141</height>
+<sql_create_table>CREATE TABLE `conta` (
+  `AgenciaCodigo` smallint(4) NOT NULL,
+  `ClienteCodigo` smallint(4) NOT NULL,
+  `ContaNumero` smallint(4) NOT NULL,
+  `ContaDigito` tinyint(4) NOT NULL,
+  PRIMARY KEY (`ContaNumero`),
+  KEY `conta_agencia` (`AgenciaCodigo`),
+  KEY `conta_cliente` (`ClienteCodigo`),
+  CONSTRAINT `conta_cliente` FOREIGN KEY (`ClienteCodigo`) REFERENCES `cliente` (`ClienteCodigo`),
+  CONSTRAINT `conta_agencia` FOREIGN KEY (`AgenciaCodigo`) REFERENCES `agencia` (`AgenciaCodigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
