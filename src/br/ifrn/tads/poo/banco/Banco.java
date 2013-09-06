@@ -1,24 +1,31 @@
 package br.ifrn.tads.poo.banco;
+
 import  br.ifrn.tads.poo.banco.agencia.Agencia;
 import  java.util.ArrayList;
 
 public class Banco {
 
-	private String nome;
 	private int numero;
-	private ArrayList<Agencia> agencias; // lista das agencias cadastradas no banco
+	private int idAgencia = 0;	
+	private String 	nome;
   
+	private ArrayList<Agencia> agencias; // lista das agencias cadastradas no banco
+
+	// Constructor
 	public Banco(int numero, String nome) {
 		this.numero = numero;
-		this.nome = nome;
+		this.nome 	= nome;
 		this.agencias = new ArrayList<Agencia>();
 	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
 	public int getNumero() {
 		return numero;
 	}
+	
 	public Agencia buscarAgencia(int numero) {
 		Agencia out = null;
 		for(Agencia agencia: this.agencias){
@@ -29,7 +36,18 @@ public class Banco {
 		}
 		return out;
 	}
-	public void adicionarAgencia(Agencia agencia) {
-		this.agencias.add(agencia);
+	
+	public void adicionarAgencia(int numero, String nome, String endereco, String nomeGerente) {
+		Agencia novaagencia = new Agencia(numero, nome, endereco, nomeGerente);
+		this.agencias.add(novaagencia);
 	}
+	
+	public String getAgencias() {
+		String retorno = "";
+		for(Agencia agencia: this.agencias){
+			retorno += agencia.getNumero()+" - "+agencia.getNome()+"\n";
+		}		
+        return retorno;
+	}
+	
 }

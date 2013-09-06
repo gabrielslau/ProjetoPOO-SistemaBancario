@@ -1,7 +1,8 @@
 package br.ifrn.tads.poo.banco.agencia;
+
 import  br.ifrn.tads.poo.banco.cliente.*;
 
-public class Conta {
+public class Conta implements IConta {
 
 	protected final double TR = 0; // Taxa Referencial
 	protected final double TAXA = 0.50;
@@ -19,6 +20,7 @@ public class Conta {
 		this.saldo  = saldo;
 		this.ativa  = ativa;
 	}
+	
 	public Conta(Agencia agencia, Cliente cliente, int numero, double saldo) {
 		this.agencia = agencia;
 		this.cliente = cliente;
@@ -26,18 +28,23 @@ public class Conta {
 		this.saldo  = saldo;
 		this.ativa  = true;
 	}
+	
 	public int getNumero() {
 		return numero;
 	}
+	
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
+	
 	public double getSaldo() {
 		return saldo;
 	}
+	
 	public boolean isAtiva() {
 		return ativa;
 	}
+	
 	public boolean sacar(double valor) {
 		if(this.saldo - valor < 0)
 			return false;
@@ -46,25 +53,33 @@ public class Conta {
 			return true;
 		}
 	}
+	
 	public void depositar(double valor) {
 		this.saldo += valor;
 	}
+	
 	public double verSaldo() {
 		return this.saldo;
 	}
+	
 	public void cancelarConta() {
 		this.ativa = false;
 	}
+	
 	public void reativarConta() {
 		this.ativa = true;
 	}
+	
 	public String verSituacaoConta(){
 		return this.ativa ? "Ativa" : "Desativada";
 	}
+	
 	public void mudarLimiteDeConta(double limite){} // é sobrescrita nas classes herdeiras
+	
 	public Cliente verInformacoesCliente(){
 		return this.cliente;
 	}
+	
 	public boolean transferirValor(int numConta, int numAgencia, double valor){
 		if(this.saldo - valor < 0) return false; // dinheiro insuficiente
 		Conta conta_destino = this.agencia.buscarConta(numConta);
@@ -74,4 +89,5 @@ public class Conta {
 		conta_destino.depositar(valor);
 		return true;
 	}
+	
 }
