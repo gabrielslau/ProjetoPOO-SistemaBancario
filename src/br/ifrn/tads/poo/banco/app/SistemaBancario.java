@@ -1,7 +1,9 @@
 package br.ifrn.tads.poo.banco.app;
 
 import java.util.Scanner;
+
 import br.ifrn.tads.poo.banco.*;
+import br.ifrn.tads.poo.banco.agencia.Agencia;
 import br.ifrn.tads.poo.banco.cliente.*;
 
 public class SistemaBancario {
@@ -14,6 +16,8 @@ public class SistemaBancario {
         Banco banco = null;
         PessoaFisica pessoafisica = null;
         PessoaJuridica pessoajuridica = null;
+        Cliente cliente = null;
+        Agencia agencia = null;
  
         while(comando != 0){
 
@@ -21,6 +25,7 @@ public class SistemaBancario {
         	String 	nome, endereco, nomeGerente, telefone, 
         			email, cpf, cnpj, nomeFantasia = "";
         	int 	numero;
+        	double 	limite;
         	
             System.out.println("");
             System.out.println("1 - Iniciar banco");
@@ -28,7 +33,9 @@ public class SistemaBancario {
             System.out.println("3 - Buscar agencia");
             System.out.println("4 - Adicionar cliente PF");
             System.out.println("5 - Adicionar cliente PJ");
-            System.out.println("6 - Adicionar conta");
+            System.out.println("6 - Adicionar conta corrente");
+            System.out.println("7 - Adicionar conta poupanca");
+            System.out.println("8 - Listar contas");
             System.out.println("0 - Sair");
             System.out.println("");
  
@@ -81,9 +88,9 @@ public class SistemaBancario {
                     sc = new Scanner(System.in);
                     nomeGerente = sc.nextLine();
                     
-                    // Adicionar agencia ao banco
-                    banco.adicionarAgencia(numero, nome, endereco, nomeGerente);
-                    		
+                    // Adicionar agencia ao banco 
+                    agencia = banco.adicionarAgencia(numero, nome, endereco, nomeGerente);
+                    
                     break;
                     
                 case 3:		// BUSCAR AGENCIA
@@ -95,10 +102,14 @@ public class SistemaBancario {
                     System.out.println("Informe o numero da agencia: ");
                     numero = sc.nextInt();
                     
+                    Agencia buscaragencia = null;
+                    buscaragencia = banco.buscarAgencia(numero);
+                    
                     // buscar agencia
-                    if (banco.buscarAgencia(numero) != null){
+                    if (buscaragencia != null){
                     	System.out.println("Agencia localizada com sucesso.");
-                    	System.out.println(banco.buscarAgencia(numero).toString());
+                    	agencia = buscaragencia;
+                    	System.out.println(agencia.getNumero()+" - "+agencia.getNome());
                     }else
                     	System.out.println("Agencia informada nao foi localizada.");
                     		
@@ -121,11 +132,11 @@ public class SistemaBancario {
                     System.out.println("Telefone: ");
                     telefone = sc.next();
                     
-                    // Adicionar agencia ao banco
+                    // Adicionar pessoa fisica
                     pessoafisica = new PessoaFisica(nome, telefone, email, cpf);                    
                     System.out.println("Operacao realizada com sucesso");                    
                     System.out.println(pessoafisica.toString());
-                                        
+                    
                     break;
                 
                 case 5:		// CRIAR CLIENTE PJ
@@ -148,27 +159,71 @@ public class SistemaBancario {
                     System.out.println("Telefone: ");
                     telefone = sc.next();
                     
-                    // Adicionar agencia ao banco
+                    // Adicionar pessoa juridica
                     pessoajuridica = new PessoaJuridica(nome, telefone, email, cnpj, nomeFantasia);                    
                     System.out.println("Operacao realizada com sucesso");                    
                     System.out.println(pessoajuridica.toString());
                                         
                     break;
                 
-				case 6:		// ADICIONAR CONTA PARA O CLIENTE
+				case 6:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PF
+                	
+					cliente	= pessoafisica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Adicionar conta.");
+                	System.out.print("Cliente na memoria: ");
+                    System.out.println(cliente.getNome());
+                    System.out.print("Agencia memoria: ");
+                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();
+                    System.out.println("Limite: ");
+                    limite = sc.nextDouble();
+                                        
+                    agencia.criarConta(cliente, numero, limite, "corrente");
+                    System.out.println("Conta corrente criada com sucesso");
+                    
+                    break;
+                    
+				case 7:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PF
+                	
+					cliente	= pessoafisica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Adicionar conta.");
+                	System.out.print("Cliente na memoria: ");
+                    System.out.println(cliente.getNome());
+                    System.out.print("Agencia memoria: ");
+                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();                  
+                                        
+                    agencia.criarConta(cliente, numero, 0, "poupanca");
+                    System.out.println("Conta poupanca criada com sucesso");
+                    
+                    break;
+                    
+				case 8:		// CRIAR AGENCIA
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
-                	System.out.println("Adicionar conta. \nCliente na memoria");
-                    System.out.println(pessoafisica.getCpf()+" - "+pessoafisica.getNome());
-                    System.out.println("---");
+                	System.out.println("Relacao de minhas contas:");
+                    System.out.println(agencia.getContas());
                     
                     break;
                     
-                
 				default:	// Opcao invalida
                     System.out.println("Nao entendi o comando.");
+                    
                     break;
+                    
             }
             
         }

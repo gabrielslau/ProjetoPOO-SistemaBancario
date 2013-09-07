@@ -5,8 +5,7 @@ import  java.util.ArrayList;
 
 public class Banco {
 
-	private int numero;
-	private int idAgencia = 0;	
+	private int numero;	
 	private String 	nome;
   
 	private ArrayList<Agencia> agencias; // lista das agencias cadastradas no banco
@@ -37,9 +36,10 @@ public class Banco {
 		return out;
 	}
 	
-	public void adicionarAgencia(int numero, String nome, String endereco, String nomeGerente) {
+	public Agencia adicionarAgencia(int numero, String nome, String endereco, String nomeGerente) {
 		Agencia novaagencia = new Agencia(numero, nome, endereco, nomeGerente);
 		this.agencias.add(novaagencia);
+		return novaagencia;
 	}
 	
 	public String getAgencias() {

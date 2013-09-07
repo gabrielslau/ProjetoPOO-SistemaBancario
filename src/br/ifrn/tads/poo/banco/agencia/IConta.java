@@ -1,7 +1,5 @@
 package br.ifrn.tads.poo.banco.agencia;
 
-import  br.ifrn.tads.poo.banco.cliente.*;
-
 public interface IConta {
 
 	public int getNumero();
@@ -25,8 +23,6 @@ public interface IConta {
 	public String verSituacaoConta();
 	
 	public void mudarLimiteDeConta(double limite);
-	
-	public Cliente verInformacoesCliente();
 	
 	public boolean transferirValor(int numConta, int numAgencia, double valor);
 	
