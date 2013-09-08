@@ -14,8 +14,6 @@ public interface IConta {
 	
 	public void depositar(double valor);
 	
-	public double verSaldo();
-	
 	public void cancelarConta();
 	
 	public void reativarConta();

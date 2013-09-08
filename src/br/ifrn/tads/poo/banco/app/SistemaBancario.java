@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import br.ifrn.tads.poo.banco.*;
 import br.ifrn.tads.poo.banco.agencia.Agencia;
+import br.ifrn.tads.poo.banco.agencia.Conta;
 import br.ifrn.tads.poo.banco.cliente.*;
 
 public class SistemaBancario {
@@ -13,11 +14,12 @@ public class SistemaBancario {
 		int comando = -1;
         Scanner sc = new Scanner(System.in);
         
-        Banco banco = null;
-        PessoaFisica pessoafisica = null;
+        Banco banco = null;						
+        PessoaFisica pessoafisica = null;		
         PessoaJuridica pessoajuridica = null;
         Cliente cliente = null;
         Agencia agencia = null;
+        Conta conta = null;
  
         while(comando != 0){
 
@@ -25,7 +27,7 @@ public class SistemaBancario {
         	String 	nome, endereco, nomeGerente, telefone, 
         			email, cpf, cnpj, nomeFantasia = "";
         	int 	numero;
-        	double 	limite;
+        	double 	limite, saque, deposito;
         	
             System.out.println("");
             System.out.println("1 - Iniciar banco");
@@ -36,6 +38,12 @@ public class SistemaBancario {
             System.out.println("6 - Adicionar conta corrente");
             System.out.println("7 - Adicionar conta poupanca");
             System.out.println("8 - Listar contas");
+            System.out.println("9 - Localizar conta");
+            System.out.println("10 - Ver saldo");
+            System.out.println("11 - Cancelar/reativar conta");
+            System.out.println("12 - Alterar limite");
+            System.out.println("13 - Depositar");
+            System.out.println("14 - Sacar");
             System.out.println("0 - Sair");
             System.out.println("");
  
@@ -185,6 +193,7 @@ public class SistemaBancario {
                     limite = sc.nextDouble();
                                         
                     agencia.criarConta(cliente, numero, limite, "corrente");
+                    conta = agencia.buscarConta(numero);
                     System.out.println("Conta corrente criada com sucesso");
                     
                     break;
@@ -206,19 +215,134 @@ public class SistemaBancario {
                     numero = sc.nextInt();                  
                                         
                     agencia.criarConta(cliente, numero, 0, "poupanca");
+                    conta = agencia.buscarConta(numero);
                     System.out.println("Conta poupanca criada com sucesso");
                     
                     break;
                     
-				case 8:		// CRIAR AGENCIA
+				case 8:		// RELACIONAR AS CONTAS CRIADAS
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
                 	System.out.println("Relacao de minhas contas:");
-                    System.out.println(agencia.getContas());
+                    System.out.println(agencia.getContas());                   
                     
                     break;
                     
+				case 9:		// LOCALIZAR CONTA
+                	
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Informe o numero da conta:");
+                	numero = sc.nextInt();                   
+                    
+                	Conta buscarconta = null;
+                    buscarconta = agencia.buscarConta(numero);
+                    
+                    // buscar conta
+                    if (buscarconta != null){
+                    	System.out.println("Conta localizada com sucesso.");
+                    	conta = buscarconta;
+                    	System.out.println(conta.toString());
+                    }else
+                    	System.out.println("A conta informada nao foi localizada.");
+                    
+                    break;
+                    
+				case 10:		// VER SALDO
+                	
+                	// Mostrar na tela       
+					
+					if (conta != null){
+						System.out.println("---");
+						System.out.println("Detalhes da conta:");
+						System.out.println("---");						
+						System.out.println("Saldo atual: "+conta.getSaldo());
+						System.out.println("Limite: "+ conta.getLimite());
+						System.out.println("Situação: "+ conta.verSituacaoConta());						
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
+                	
+                	break;
+                
+				case 11:		// CANCELAR CONTA
+                	
+					if (conta != null){
+						System.out.println("---");
+						if (conta.isAtiva()){
+							conta.cancelarConta();
+							System.out.println("Conta cancelada com sucesso!");	
+						}else{
+							conta.reativarConta();
+							System.out.println("Conta reativada com sucesso!");
+						}
+												
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
+                	
+                	break;
+                
+				case 12:		// MUDAR LIMITE
+                	
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Informe o novo limite:");
+                	limite = sc.nextDouble();                   
+                    
+                	if (conta != null){
+						System.out.println("---");
+						conta.mudarLimiteDeConta(limite);
+						System.out.println("Limite da conta alterado com sucesso!");						
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
+                    
+                    break;
+                    
+				case 13:		// DEPOSITAR
+                	
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Informe o valor do deposito:");
+                	deposito = sc.nextDouble();                   
+                    
+                	if (conta != null){
+						System.out.println("---");
+						conta.depositar(deposito);
+						System.out.println("Deposito realizado com sucesso!");						
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
+                    
+                    break;
+                
+				case 14:		// SACAR
+                	
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Informe o valor do saque:");
+                	saque = sc.nextDouble();                   
+                    
+                	if (conta != null){
+						System.out.println("---");
+						if (conta.sacar(saque))
+							System.out.println("Saque realizado com sucesso!");
+						else
+							System.out.println("Saldo insuficiente!");
+						
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
+                    
+                    break;
+                
 				default:	// Opcao invalida
                     System.out.println("Nao entendi o comando.");
                     

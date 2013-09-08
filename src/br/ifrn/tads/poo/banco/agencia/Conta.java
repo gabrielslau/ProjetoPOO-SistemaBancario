@@ -44,10 +44,6 @@ public class Conta implements IConta {
 		this.saldo += valor;
 	}
 	
-	public double verSaldo() {
-		return this.saldo;
-	}
-	
 	public void cancelarConta() {
 		this.ativa = false;
 	}
@@ -65,6 +61,10 @@ public class Conta implements IConta {
 	}
 	
 	public void mudarLimiteDeConta(double limite){} // é sobrescrita nas classes herdeiras
+	
+	public double getLimite(){	
+		return 0;
+	}
 	
 	public boolean transferirValor(int numConta, int numAgencia, double valor){
 		if(this.saldo - valor < 0) return false; // dinheiro insuficiente

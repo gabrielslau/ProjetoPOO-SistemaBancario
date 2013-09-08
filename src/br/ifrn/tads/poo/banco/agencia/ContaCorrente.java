@@ -12,5 +12,9 @@ public class ContaCorrente extends Conta {
 	public void mudarLimiteDeConta(double limite){
 		this.limite = limite;
 	}
+	
+	public double getLimite() {
+		return limite;
+	}
 
 }
