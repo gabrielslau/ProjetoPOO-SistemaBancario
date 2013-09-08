@@ -1,5 +1,7 @@
 package br.ifrn.tads.poo.banco.agencia;
 
+import br.ifrn.tads.poo.banco.cliente.Cliente;
+
 public class Conta implements IConta {
 
 	protected final double TR = 0; // Taxa Referencial
@@ -66,13 +68,12 @@ public class Conta implements IConta {
 		return 0;
 	}
 	
-	public boolean transferirValor(int numConta, int numAgencia, double valor){
+	public boolean transferirValor(Conta contadestino, double valor){
 		if(this.saldo - valor < 0) return false; // dinheiro insuficiente
-		//Conta conta_destino = this.agencia.buscarConta(numConta);
-		//if(conta_destino == null) return false; // conta inexistente
 		
-		// precisa do numero da Agencia para quê ???
-		//conta_destino.depositar(valor);
+		this.sacar(valor);				// Sacar da conta atual
+		contadestino.depositar(valor);	// Depositar na conta destino
+		
 		return true;
 	}
 	

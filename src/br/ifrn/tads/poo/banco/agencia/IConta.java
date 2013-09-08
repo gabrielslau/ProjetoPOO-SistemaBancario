@@ -22,6 +22,6 @@ public interface IConta {
 	
 	public void mudarLimiteDeConta(double limite);
 	
-	public boolean transferirValor(int numConta, int numAgencia, double valor);
+	public boolean transferirValor(Conta contadestino, double valor);
 	
 }

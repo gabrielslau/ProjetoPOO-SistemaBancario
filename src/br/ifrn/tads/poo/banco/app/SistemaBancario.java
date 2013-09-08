@@ -27,7 +27,7 @@ public class SistemaBancario {
         	String 	nome, endereco, nomeGerente, telefone, 
         			email, cpf, cnpj, nomeFantasia = "";
         	int 	numero;
-        	double 	limite, saque, deposito;
+        	double 	limite, valor;
         	
             System.out.println("");
             System.out.println("1 - Iniciar banco");
@@ -44,6 +44,7 @@ public class SistemaBancario {
             System.out.println("12 - Alterar limite");
             System.out.println("13 - Depositar");
             System.out.println("14 - Sacar");
+            System.out.println("15 - Transferir");
             System.out.println("0 - Sair");
             System.out.println("");
  
@@ -288,12 +289,12 @@ public class SistemaBancario {
                 
 				case 12:		// MUDAR LIMITE
                 	
-                	// Mostrar na tela                	
-                	System.out.println("---");
-                	System.out.println("Informe o novo limite:");
-                	limite = sc.nextDouble();                   
-                    
                 	if (conta != null){
+                		
+                		System.out.println("---");
+                    	System.out.println("Informe o novo limite:");
+                    	limite = sc.nextDouble();                   
+                        
 						System.out.println("---");
 						conta.mudarLimiteDeConta(limite);
 						System.out.println("Limite da conta alterado com sucesso!");						
@@ -306,14 +307,13 @@ public class SistemaBancario {
                     
 				case 13:		// DEPOSITAR
                 	
-                	// Mostrar na tela                	
-                	System.out.println("---");
-                	System.out.println("Informe o valor do deposito:");
-                	deposito = sc.nextDouble();                   
-                    
                 	if (conta != null){
-						System.out.println("---");
-						conta.depositar(deposito);
+                		System.out.println("---");
+                    	System.out.println("Informe o valor do deposito:");
+                    	valor = sc.nextDouble();                   
+                        
+                    	System.out.println("---");
+						conta.depositar(valor);
 						System.out.println("Deposito realizado com sucesso!");						
 					}else{
 						System.out.println("---");
@@ -324,14 +324,12 @@ public class SistemaBancario {
                 
 				case 14:		// SACAR
                 	
-                	// Mostrar na tela                	
-                	System.out.println("---");
-                	System.out.println("Informe o valor do saque:");
-                	saque = sc.nextDouble();                   
-                    
                 	if (conta != null){
-						System.out.println("---");
-						if (conta.sacar(saque))
+                		System.out.println("---");
+                    	System.out.println("Informe o valor do saque:");
+                    	valor = sc.nextDouble();
+                    	System.out.println("---");
+						if (conta.sacar(valor))
 							System.out.println("Saque realizado com sucesso!");
 						else
 							System.out.println("Saldo insuficiente!");
@@ -339,6 +337,39 @@ public class SistemaBancario {
 					}else{
 						System.out.println("---");
 						System.out.println("Localizar primeiro a conta");
+					}
+                    
+                    break;
+                
+				case 15:		// TRANSFERIR
+                	
+                	if (conta != null){
+                		
+                		System.out.println("---");
+                    	System.out.println("Informe o numero da conta destino:");
+                    	numero = sc.nextInt();                   
+                        
+                    	Conta contadestino = null;
+                    	contadestino = agencia.buscarConta(numero);
+                        
+                        if (contadestino != null){
+                        	System.out.println("---");
+                        	System.out.println("Informe o valor da transferencia:");
+                        	valor = sc.nextDouble();
+                        	System.out.println("---");
+    						if (conta.transferirValor(contadestino, valor))
+    							System.out.println("Tranferencia realizada com sucesso!");
+    						else
+    							System.out.println("Saldo insuficiente!");
+	
+                        }else{
+    						System.out.println("---");
+    						System.out.println("A conta de destino nao foi localizada.");
+                        }
+                								
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta de origem.");
 					}
                     
                     break;
