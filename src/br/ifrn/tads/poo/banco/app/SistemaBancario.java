@@ -2,6 +2,8 @@ package br.ifrn.tads.poo.banco.app;
 
 import java.util.Scanner;
 
+import com.sun.org.apache.bcel.internal.generic.InstructionConstants.Clinit;
+
 import br.ifrn.tads.poo.banco.*;
 import br.ifrn.tads.poo.banco.agencia.Agencia;
 import br.ifrn.tads.poo.banco.agencia.Conta;
@@ -49,6 +51,7 @@ public class SistemaBancario {
             System.out.println("16 - PJ Adicionar conta corrente");
             System.out.println("17 - PJ Adicionar conta poupanca");
             System.out.println("18 - Listar clientes");
+            System.out.println("19 - Listar contas do cliente");
             System.out.println("0 - Sair");
             System.out.println("");
  
@@ -265,7 +268,8 @@ public class SistemaBancario {
 					if (conta != null){
 						System.out.println("---");
 						System.out.println("Detalhes da conta:");
-						System.out.println("---");						
+						System.out.println("---");
+						System.out.println("Titular: "+conta.getCliente());
 						System.out.println("Saldo atual: "+conta.getSaldo());
 						System.out.println("Limite: "+ conta.getLimite());
 						System.out.println("Situação: "+ conta.verSituacaoConta());						
@@ -474,6 +478,15 @@ public class SistemaBancario {
                     break;
                     
 				
+				case 19:		// LISTAR CONTAS DO CLIENTE
+                	
+                	// Mostrar na tela
+					System.out.println("---");
+                	System.out.println("Relacao das contas do cliente: "+ cliente.getNome());
+                    System.out.println(agencia.ListContasCliente(cliente));                   
+                    
+                    break;
+                   
 				default:	// Opcao invalida
                     System.out.println("Nao entendi o comando.");
                     
