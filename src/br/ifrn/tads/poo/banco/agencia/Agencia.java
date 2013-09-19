@@ -3,6 +3,7 @@ package br.ifrn.tads.poo.banco.agencia;
 import  br.ifrn.tads.poo.banco.cliente.*;
 
 import  java.util.ArrayList;
+import java.util.HashMap;
 
 public class Agencia {
 
@@ -18,8 +19,8 @@ public class Agencia {
 		this.nome = nome;
 		this.endereco = endereco;
 		this.nomeGerente = nomeGerente;
-		this.contas = new ArrayList<Conta>(); // habilita a adição de contas
-		this.clientes = new ArrayList<Cliente>(); // habilita a adição de clientes
+		this.contas = new ArrayList<Conta>(); 		// habilita a adição de contas
+		this.clientes = new ArrayList<Cliente>(); 	// habilita a adição de clientes
 	}
 	
 	public String toString(){
@@ -62,12 +63,22 @@ public class Agencia {
 		Conta novaconta = null;
 		
 		if(tipoConta.equalsIgnoreCase("corrente"))
-			novaconta = new ContaCorrente(numConta, limiteConta);			
+			novaconta = new ContaCorrente(cliente, numConta, limiteConta);			
 		else if(tipoConta.equalsIgnoreCase("poupanca"))
-			novaconta = new ContaPoupanca(numConta);
+			novaconta = new ContaPoupanca(cliente, numConta);
 		
 		this.contas.add(novaconta);	// Adicionar conta criada no meu array de contas
-		this.clientes.add(cliente); // Adicionar o cliente ao meu array de clients
+		adicionarCliente(cliente); 	// Adicionar(ou nao) o cliente ao meu array de clients
+	}
+	
+	public void adicionarCliente(Cliente clienteAdd) {
+		for(Cliente cliente: this.clientes){
+			if	(cliente.equals(clienteAdd)){
+				return; 	// Achei! Sair sem adicionar.
+			}
+		}
+		
+		this.clientes.add(clienteAdd); // Adicionar o cliente ao meu array de clients
 	}
 	
 	public String getContas() {
@@ -97,4 +108,15 @@ public class Agencia {
 		return out;
 	}
 	
+	public String ListContasCliente(Cliente clienteList) {
+		// Listar todas as contas do cliente
+		String retorno = "";
+		for(Conta conta: this.contas){
+			if	(conta.cliente.equals(clienteList)){
+				retorno += conta+"\n";
+			}
+		}		
+        return retorno;
+	}
+
 }
