@@ -32,30 +32,42 @@ public class SistemaBancario {
         	int 	numero;
         	double 	limite, valor;
         	
+        	System.out.println("");
+            System.out.println("************* MENU **************");
+            System.out.println("*********************************");
+            //System.out.println("");
+            System.out.println("* INICIALIZAR BANCO");
+            System.out.println("10 - Adicionar banco");
+            System.out.println("11 - Adicionar agencia");
+            System.out.println("12 - Buscar agencia");
+            //System.out.println("");
+            System.out.println("* PESSOA FISICA");           
+            System.out.println("21 - Adicionar cliente PF");          
+            System.out.println("22 - Adicionar conta corrente");
+            System.out.println("23 - Adicionar conta poupanca");
+            //System.out.println("");
+            System.out.println("* PESSOA JURIDICA");            
+            System.out.println("31 - Adicionar cliente PJ");
+            System.out.println("32 - Adicionar conta corrente");
+            System.out.println("33 - Adicionar conta poupanca");
+            //System.out.println("");
+            System.out.println("* OPERAÇÕES BANCARIAS");
+            System.out.println("41 - Localizar conta");            
+            System.out.println("42 - Cancelar/reativar conta");
+            System.out.println("43 - Alterar limite");
+            System.out.println("44 - Depositar");
+            System.out.println("45 - Sacar");
+            System.out.println("46 - Transferir");
+            //System.out.println("");
+            System.out.println("* CONSULTAS/RELATORIOS");
+            System.out.println("51 - Listar contas");           
+            System.out.println("52 - Ver saldo");
+            System.out.println("53 - Listar clientes");
+            System.out.println("54 - Listar contas do cliente");
             System.out.println("");
-            System.out.println("1 - Iniciar banco");
-            System.out.println("2 - Adicionar agencia");
-            System.out.println("3 - Buscar agencia");
-            System.out.println("4 - Adicionar cliente PF");
-            System.out.println("5 - Adicionar cliente PJ");
-            System.out.println("6 - PF Adicionar conta corrente");
-            System.out.println("7 - PF Adicionar conta poupanca");
-            System.out.println("8 - Listar contas");
-            System.out.println("9 - Localizar conta");
-            System.out.println("10 - Ver saldo");
-            System.out.println("11 - Cancelar/reativar conta");
-            System.out.println("12 - Alterar limite");
-            System.out.println("13 - Depositar");
-            System.out.println("14 - Sacar");
-            System.out.println("15 - Transferir");
-            System.out.println("16 - PJ Adicionar conta corrente");
-            System.out.println("17 - PJ Adicionar conta poupanca");
-            System.out.println("18 - Listar clientes");
-            System.out.println("19 - Listar contas do cliente");
             System.out.println("0 - Sair");
-            System.out.println("");
- 
-            System.out.println("Escolha a operacao: ");
+            //System.out.println(""); 
+            System.out.print("Escolha a operacao: ");
             comando = sc.nextInt();
  
             switch(comando){
@@ -65,7 +77,7 @@ public class SistemaBancario {
                     System.out.println("Ate logo!");
                     break;
                     
-                case 1:		// INICIA BANCO 
+                case 10:		// Adicionar banco 
                 
                 	// 	Mostrar na tela
                 	System.out.println("---");
@@ -82,15 +94,15 @@ public class SistemaBancario {
                     
                     break;
                     
-                case 2:		// CRIAR AGENCIA
+                case 11:		// CRIAR AGENCIA
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
-                	System.out.println("Adicionar nova agencia ao meu banco:");
-                    System.out.println(banco.getNumero()+" - "+banco.getNome());
-                    System.out.println("---");                    
-                    System.out.println("Relacao de minhas agencias:");
-                    System.out.println(banco.getAgencias());
+                	System.out.println("Adicionar nova agencia ao meu banco: " + banco.getNumero()+" - "+banco.getNome());
+                	if (banco.sizeAgencias() > 0){ 
+                		System.out.println("Agencias ja cadastradas:");
+                		System.out.println(banco.getAgencias());
+                	}
                     System.out.println("---");
                     System.out.println("Número da agencia: ");
                     numero = sc.nextInt();
@@ -111,7 +123,7 @@ public class SistemaBancario {
                     
                     break;
                     
-                case 3:		// BUSCAR AGENCIA
+                case 12:		// BUSCAR AGENCIA
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
@@ -134,7 +146,7 @@ public class SistemaBancario {
                     buscaragencia = null;
                     break;
                                 
-                case 4:		// CRIAR CLIENTE PF
+                case 21:		// CRIAR CLIENTE PF
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
@@ -158,7 +170,52 @@ public class SistemaBancario {
                     
                     break;
                 
-                case 5:		// CRIAR CLIENTE PJ
+                case 22:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PF
+                	
+					cliente	= pessoafisica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("ADICIONAR NOVA CONTA:");
+                	System.out.println("BANCO: " + banco.getNumero()+" - "+banco.getNome());
+                    System.out.println("AGENCIA : "+agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("CLIENTE: "+cliente.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();
+                    System.out.println("Limite: ");
+                    limite = sc.nextDouble();
+                                        
+                    agencia.criarConta(cliente, numero, limite, "corrente");
+                    conta = agencia.buscarConta(numero);
+                    System.out.println("Conta corrente criada com sucesso");
+                    System.out.println(conta);
+                    
+                    break;
+                    
+				case 23:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PF
+                	
+					cliente	= pessoafisica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("BANCO: " + banco.getNumero()+" - "+banco.getNome());
+                    System.out.println("AGENCIA : "+agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("CLIENTE: "+cliente.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();                  
+                                        
+                    agencia.criarConta(cliente, numero, 0, "poupanca");
+                    conta = agencia.buscarConta(numero);
+                    System.out.println("Conta poupanca criada com sucesso");
+                    System.out.println(conta);
+                    
+                    break;
+                    
+				case 31:		// CRIAR CLIENTE PJ
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
@@ -185,17 +242,16 @@ public class SistemaBancario {
                                         
                     break;
                 
-				case 6:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PF
+				case 32:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PJ
                 	
-					cliente	= pessoafisica;
+					cliente	= pessoajuridica;
 					
                 	// Mostrar na tela                	
                 	System.out.println("---");
-                	System.out.println("Adicionar conta.");
-                	System.out.print("Cliente na memoria: ");
-                    System.out.println(cliente.getNome());
-                    System.out.print("Agencia memoria: ");
-                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                	System.out.println("ADICIONAR NOVA CONTA:");
+                	System.out.println("BANCO: " + banco.getNumero()+" - "+banco.getNome());
+                    System.out.println("AGENCIA : "+agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("CLIENTE: "+cliente.getNome());
                     System.out.println("---");
                     
                     System.out.println("Número: ");
@@ -206,20 +262,20 @@ public class SistemaBancario {
                     agencia.criarConta(cliente, numero, limite, "corrente");
                     conta = agencia.buscarConta(numero);
                     System.out.println("Conta corrente criada com sucesso");
+                    System.out.println(conta);
                     
                     break;
                     
-				case 7:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PF
+				case 33:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PJ
                 	
-					cliente	= pessoafisica;
+					cliente	= pessoajuridica;
 					
                 	// Mostrar na tela                	
                 	System.out.println("---");
-                	System.out.println("Adicionar conta.");
-                	System.out.print("Cliente na memoria: ");
-                    System.out.println(cliente.getNome());
-                    System.out.print("Agencia memoria: ");
-                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                	System.out.println("ADICIONAR NOVA CONTA:");
+                	System.out.println("BANCO: " + banco.getNumero()+" - "+banco.getNome());
+                    System.out.println("AGENCIA : "+agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("CLIENTE: "+cliente.getNome());
                     System.out.println("---");
                     
                     System.out.println("Número: ");
@@ -228,19 +284,11 @@ public class SistemaBancario {
                     agencia.criarConta(cliente, numero, 0, "poupanca");
                     conta = agencia.buscarConta(numero);
                     System.out.println("Conta poupanca criada com sucesso");
+                    System.out.println(conta);
                     
                     break;
                     
-				case 8:		// RELACIONAR AS CONTAS CRIADAS
-                	
-                	// Mostrar na tela                	
-                	System.out.println("---");
-                	System.out.println("Relacao de minhas contas:");
-                    System.out.println(agencia.getContas());                   
-                    
-                    break;
-                    
-				case 9:		// LOCALIZAR CONTA
+				case 41:		// LOCALIZAR CONTA
                 	
                 	// Mostrar na tela                	
                 	System.out.println("---");
@@ -261,26 +309,7 @@ public class SistemaBancario {
                     buscarconta = null;
                     break;
                     
-				case 10:		// VER SALDO
-                	
-                	// Mostrar na tela       
-					
-					if (conta != null){
-						System.out.println("---");
-						System.out.println("Detalhes da conta:");
-						System.out.println("---");
-						System.out.println("Titular: "+conta.getCliente());
-						System.out.println("Saldo atual: "+conta.getSaldo());
-						System.out.println("Limite: "+ conta.getLimite());
-						System.out.println("Situação: "+ conta.verSituacaoConta());						
-					}else{
-						System.out.println("---");
-						System.out.println("Localizar primeiro a conta");
-					}
-                	
-                	break;
-                
-				case 11:		// CANCELAR CONTA
+				case 42:		// CANCELAR CONTA
                 	
 					if (conta != null){
 						System.out.println("---");
@@ -299,7 +328,7 @@ public class SistemaBancario {
                 	
                 	break;
                 
-				case 12:		// MUDAR LIMITE
+				case 43:		// MUDAR LIMITE
                 	
                 	if (conta != null){
                 		
@@ -326,7 +355,7 @@ public class SistemaBancario {
                     
                     break;
                     
-				case 13:		// DEPOSITAR
+				case 44:		// DEPOSITAR
                 	
                 	if (conta != null){
                 		
@@ -349,7 +378,7 @@ public class SistemaBancario {
                     
                     break;
                 
-				case 14:		// SACAR
+				case 45:		// SACAR
                 	
                 	if (conta != null){
                 		
@@ -375,7 +404,7 @@ public class SistemaBancario {
                     
                     break;
                 
-				case 15:		// TRANSFERIR
+				case 46:		// TRANSFERIR
                 	
                 	if (conta != null){
                 		
@@ -422,54 +451,36 @@ public class SistemaBancario {
                     
                     break;
                 
-				case 16:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PJ
+				case 51:		// LISTAR AS CONTAS CRIADAS
                 	
-					cliente	= pessoajuridica;
-					
                 	// Mostrar na tela                	
                 	System.out.println("---");
-                	System.out.println("Adicionar conta.");
-                	System.out.print("Cliente na memoria: ");
-                    System.out.println(cliente.getNome());
-                    System.out.print("Agencia memoria: ");
-                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
-                    System.out.println("---");
-                    
-                    System.out.println("Número: ");
-                    numero = sc.nextInt();
-                    System.out.println("Limite: ");
-                    limite = sc.nextDouble();
-                                        
-                    agencia.criarConta(cliente, numero, limite, "corrente");
-                    conta = agencia.buscarConta(numero);
-                    System.out.println("Conta corrente criada com sucesso");
+                	System.out.println("Relacao de minhas contas:");
+                    System.out.println(agencia.getContas());                   
                     
                     break;
                     
-				case 17:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PJ
+				case 52:		// VER SALDO
                 	
-					cliente	= pessoajuridica;
+                	// Mostrar na tela       
 					
-                	// Mostrar na tela                	
-                	System.out.println("---");
-                	System.out.println("Adicionar conta.");
-                	System.out.print("Cliente na memoria: ");
-                    System.out.println(cliente.getNome());
-                    System.out.print("Agencia memoria: ");
-                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
-                    System.out.println("---");
-                    
-                    System.out.println("Número: ");
-                    numero = sc.nextInt();                  
-                                        
-                    agencia.criarConta(cliente, numero, 0, "poupanca");
-                    conta = agencia.buscarConta(numero);
-                    System.out.println("Conta poupanca criada com sucesso");
-                    
-                    break;
-                    
-				case 18:		// RELACIONAR AS CONTAS CRIADAS
+					if (conta != null){
+						System.out.println("---");
+						System.out.println("Detalhes da conta:");
+						System.out.println("---");
+						System.out.println("Titular: "+conta.getCliente());
+						System.out.println("Saldo atual: "+conta.getSaldo());
+						System.out.println("Limite: "+ conta.getLimite());
+						System.out.println("Situação: "+ conta.verSituacaoConta());						
+					}else{
+						System.out.println("---");
+						System.out.println("Localizar primeiro a conta");
+					}
                 	
+                	break;
+                
+				case 53:		// LISTAR CLIENTES
+					
                 	// Mostrar na tela
 					System.out.println("---");
                 	System.out.println("Relacao de meus clientes:");
@@ -477,8 +488,7 @@ public class SistemaBancario {
                     
                     break;
                     
-				
-				case 19:		// LISTAR CONTAS DO CLIENTE
+				case 54:		// LISTAR CONTAS DO CLIENTE
                 	
                 	// Mostrar na tela
 					System.out.println("---");
