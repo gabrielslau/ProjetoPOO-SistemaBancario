@@ -50,4 +50,8 @@ public class Banco {
         return retorno;
 	}
 	
+	public int sizeAgencias() {
+		return this.agencias.size();
+	}
+	
 }
