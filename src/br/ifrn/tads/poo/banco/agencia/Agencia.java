@@ -60,6 +60,7 @@ public class Agencia {
 	
 	public void criarConta(Cliente cliente, int numConta, double limiteConta, String tipoConta) {
 		Conta novaconta = null;
+		
 		if(tipoConta.equalsIgnoreCase("corrente"))
 			novaconta = new ContaCorrente(numConta, limiteConta);			
 		else if(tipoConta.equalsIgnoreCase("poupanca"))
@@ -73,6 +74,14 @@ public class Agencia {
 		String retorno = "";
 		for(Conta conta: this.contas){
 			retorno += conta+"\n";	
+		}		
+        return retorno;
+	}
+	
+	public String getClientes() {
+		String retorno = "";
+		for(Cliente cliente: this.clientes){
+			retorno += cliente+"\n";	
 		}		
         return retorno;
 	}
