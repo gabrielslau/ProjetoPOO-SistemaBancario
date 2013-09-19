@@ -4,14 +4,16 @@ import br.ifrn.tads.poo.banco.cliente.Cliente;
 
 public class Conta implements IConta {
 
-	protected final double TR = 0; // Taxa Referencial
+	protected final double TR = 0; 		// Taxa Referencial
 	protected final double TAXA = 0.50;
 	
+	protected Cliente cliente; 
 	protected int numero;
 	protected double saldo;
 	protected boolean ativa;
 	
-	public Conta(int numero) {
+	public Conta(Cliente cliente, int numero) {
+		this.cliente = cliente;
 		this.numero = numero;
 		this.saldo  = 0;
 		this.ativa  = true;
@@ -31,6 +33,10 @@ public class Conta implements IConta {
 	
 	public boolean isAtiva() {
 		return ativa;
+	}
+	
+	public String getCliente() {
+		return this.cliente.getNome();
 	}
 	
 	public boolean sacar(double valor) {
@@ -65,7 +71,8 @@ public class Conta implements IConta {
 		String Tipo = (this instanceof ContaCorrente) ? "Corrente" : "Poupança";
 		String Retorno = "";	
 		Retorno 	= "Numero: " + String.valueOf(this.numero);
-		Retorno 	+= "; Tipo " + Tipo + "; Saldo: " + this.saldo;
+		Retorno 	+= "; Titular: " + this.cliente.getNome();
+		Retorno 	+= "; Tipo: " + Tipo + "; Saldo: " + this.saldo;
 		Retorno 	+= "; Situacao: " + (this.ativa ? "Ativa" : "Desativada");
 		if 	(this instanceof ContaCorrente){
 			Retorno 	+= "; Limite: " + this.getLimite();
