@@ -5,6 +5,7 @@ import java.util.Scanner;
 import br.ifrn.tads.poo.banco.*;
 import br.ifrn.tads.poo.banco.agencia.Agencia;
 import br.ifrn.tads.poo.banco.agencia.Conta;
+import br.ifrn.tads.poo.banco.agencia.ContaCorrente;
 import br.ifrn.tads.poo.banco.cliente.*;
 
 public class SistemaBancario {
@@ -35,8 +36,8 @@ public class SistemaBancario {
             System.out.println("3 - Buscar agencia");
             System.out.println("4 - Adicionar cliente PF");
             System.out.println("5 - Adicionar cliente PJ");
-            System.out.println("6 - Adicionar conta corrente");
-            System.out.println("7 - Adicionar conta poupanca");
+            System.out.println("6 - PF Adicionar conta corrente");
+            System.out.println("7 - PF Adicionar conta poupanca");
             System.out.println("8 - Listar contas");
             System.out.println("9 - Localizar conta");
             System.out.println("10 - Ver saldo");
@@ -45,6 +46,9 @@ public class SistemaBancario {
             System.out.println("13 - Depositar");
             System.out.println("14 - Sacar");
             System.out.println("15 - Transferir");
+            System.out.println("16 - PJ Adicionar conta corrente");
+            System.out.println("17 - PJ Adicionar conta poupanca");
+            System.out.println("18 - Listar clientes");
             System.out.println("0 - Sair");
             System.out.println("");
  
@@ -99,6 +103,8 @@ public class SistemaBancario {
                     
                     // Adicionar agencia ao banco 
                     agencia = banco.adicionarAgencia(numero, nome, endereco, nomeGerente);
+                    // destruir (caso ja tenha sido instanciado)
+                    conta = null;
                     
                     break;
                     
@@ -121,7 +127,8 @@ public class SistemaBancario {
                     	System.out.println(agencia.getNumero()+" - "+agencia.getNome());
                     }else
                     	System.out.println("Agencia informada nao foi localizada.");
-                    		
+                    
+                    buscaragencia = null;
                     break;
                                 
                 case 4:		// CRIAR CLIENTE PF
@@ -248,6 +255,7 @@ public class SistemaBancario {
                     }else
                     	System.out.println("A conta informada nao foi localizada.");
                     
+                    buscarconta = null;
                     break;
                     
 				case 10:		// VER SALDO
@@ -291,13 +299,22 @@ public class SistemaBancario {
                 	
                 	if (conta != null){
                 		
-                		System.out.println("---");
-                    	System.out.println("Informe o novo limite:");
-                    	limite = sc.nextDouble();                   
-                        
-						System.out.println("---");
-						conta.mudarLimiteDeConta(limite);
-						System.out.println("Limite da conta alterado com sucesso!");						
+                		if (conta instanceof ContaCorrente){
+                			
+	                		if (conta.isAtiva()){
+	                			System.out.println("---");
+	                        	System.out.println("Informe o novo limite:");
+	                        	limite = sc.nextDouble();                   
+	                            
+	    						System.out.println("---");
+	    						conta.mudarLimiteDeConta(limite);
+	    						System.out.println("Limite da conta alterado com sucesso!");	
+	                		}else
+	                			System.out.println("Operacao nao realizada. A conta nao esta ativa!");
+	                		       
+                		}else
+                			System.out.println("Operacao nao realizada. Sua conta não é do tipo conta corrente!");             
+                								
 					}else{
 						System.out.println("---");
 						System.out.println("Localizar primeiro a conta");
@@ -308,13 +325,19 @@ public class SistemaBancario {
 				case 13:		// DEPOSITAR
                 	
                 	if (conta != null){
-                		System.out.println("---");
-                    	System.out.println("Informe o valor do deposito:");
-                    	valor = sc.nextDouble();                   
-                        
-                    	System.out.println("---");
-						conta.depositar(valor);
-						System.out.println("Deposito realizado com sucesso!");						
+                		
+                		if (conta.isAtiva()){
+                			System.out.println("---");
+                        	System.out.println("Informe o valor do deposito:");
+                        	valor = sc.nextDouble();                   
+                            
+                        	System.out.println("---");
+    						conta.depositar(valor);
+    						System.out.println("Deposito realizado com sucesso!");	
+                		}else{
+                			System.out.println("Operacao nao realizada. A conta nao esta ativa!");
+                		}
+                								
 					}else{
 						System.out.println("---");
 						System.out.println("Localizar primeiro a conta");
@@ -325,15 +348,22 @@ public class SistemaBancario {
 				case 14:		// SACAR
                 	
                 	if (conta != null){
-                		System.out.println("---");
-                    	System.out.println("Informe o valor do saque:");
-                    	valor = sc.nextDouble();
-                    	System.out.println("---");
-						if (conta.sacar(valor))
-							System.out.println("Saque realizado com sucesso!");
-						else
-							System.out.println("Saldo insuficiente!");
-						
+                		
+                		if (conta.isAtiva()){
+                			
+                			System.out.println("---");
+                			System.out.println("Informe o valor do saque:");
+                			valor = sc.nextDouble();
+                			System.out.println("---");
+                			if (conta.sacar(valor))
+                				System.out.println("Saque realizado com sucesso!");
+                			else
+                				System.out.println("Saldo insuficiente!");
+                			
+                		}else{
+                			System.out.println("Operacao nao realizada. A conta nao esta ativa!");
+                		}
+                		
 					}else{
 						System.out.println("---");
 						System.out.println("Localizar primeiro a conta");
@@ -345,27 +375,41 @@ public class SistemaBancario {
                 	
                 	if (conta != null){
                 		
-                		System.out.println("---");
-                    	System.out.println("Informe o numero da conta destino:");
-                    	numero = sc.nextInt();                   
-                        
-                    	Conta contadestino = null;
-                    	contadestino = agencia.buscarConta(numero);
-                        
-                        if (contadestino != null){
-                        	System.out.println("---");
-                        	System.out.println("Informe o valor da transferencia:");
-                        	valor = sc.nextDouble();
-                        	System.out.println("---");
-    						if (conta.transferirValor(contadestino, valor))
-    							System.out.println("Tranferencia realizada com sucesso!");
-    						else
-    							System.out.println("Saldo insuficiente!");
-	
-                        }else{
-    						System.out.println("---");
-    						System.out.println("A conta de destino nao foi localizada.");
-                        }
+                		if (conta.isAtiva()){
+                		
+                			System.out.println("---");
+                        	System.out.println("Informe o numero da conta destino:");
+                        	numero = sc.nextInt();                   
+                            
+                        	Conta contadestino = null;
+                        	contadestino = agencia.buscarConta(numero);
+                            
+                            if (contadestino != null){
+                            	
+                            	if (contadestino.isAtiva()){
+                            		System.out.println("---");
+                                	System.out.println("Informe o valor da transferencia:");
+                                	valor = sc.nextDouble();
+                                	System.out.println("---");
+            						if (conta.transferirValor(contadestino, valor))
+            							System.out.println("Tranferencia realizada com sucesso!");
+            						else
+            							System.out.println("Saldo insuficiente!");	
+                            	}else{
+                        			System.out.println("Operacao nao realizada. A conta de destino nao esta ativa!");
+                        		}
+                            	
+    	
+                            }else{
+        						System.out.println("---");
+        						System.out.println("A conta de destino nao foi localizada.");
+                            }
+                            
+                            contadestino = null;
+                            
+                		}else{
+                			System.out.println("Operacao nao realizada. A conta de origem nao esta ativa!");
+                		}
                 								
 					}else{
 						System.out.println("---");
@@ -374,6 +418,62 @@ public class SistemaBancario {
                     
                     break;
                 
+				case 16:		// ADICIONAR CONTA CORRENTE PARA O CLIENTE PJ
+                	
+					cliente	= pessoajuridica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Adicionar conta.");
+                	System.out.print("Cliente na memoria: ");
+                    System.out.println(cliente.getNome());
+                    System.out.print("Agencia memoria: ");
+                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();
+                    System.out.println("Limite: ");
+                    limite = sc.nextDouble();
+                                        
+                    agencia.criarConta(cliente, numero, limite, "corrente");
+                    conta = agencia.buscarConta(numero);
+                    System.out.println("Conta corrente criada com sucesso");
+                    
+                    break;
+                    
+				case 17:		// ADICIONAR CONTA POUPANCA PARA O CLIENTE PJ
+                	
+					cliente	= pessoajuridica;
+					
+                	// Mostrar na tela                	
+                	System.out.println("---");
+                	System.out.println("Adicionar conta.");
+                	System.out.print("Cliente na memoria: ");
+                    System.out.println(cliente.getNome());
+                    System.out.print("Agencia memoria: ");
+                    System.out.println(agencia.getNumero()+" - "+agencia.getNome());
+                    System.out.println("---");
+                    
+                    System.out.println("Número: ");
+                    numero = sc.nextInt();                  
+                                        
+                    agencia.criarConta(cliente, numero, 0, "poupanca");
+                    conta = agencia.buscarConta(numero);
+                    System.out.println("Conta poupanca criada com sucesso");
+                    
+                    break;
+                    
+				case 18:		// RELACIONAR AS CONTAS CRIADAS
+                	
+                	// Mostrar na tela
+					System.out.println("---");
+                	System.out.println("Relacao de meus clientes:");
+                    System.out.println(agencia.getClientes());                   
+                    
+                    break;
+                    
+				
 				default:	// Opcao invalida
                     System.out.println("Nao entendi o comando.");
                     
