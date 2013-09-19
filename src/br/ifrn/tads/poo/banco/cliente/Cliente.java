@@ -43,6 +43,12 @@ public class Cliente implements ICliente {
 		return nome;
 	}
 	
+	public String toString(){
+		String Tipo 	= (this instanceof PessoaFisica) ? "Pessoa Fisica" : "Pessoa Juridica";
+		String Retorno 	= "Nome: " + String.valueOf(this.nome) + "; Tipo: " + Tipo;		
+		return Retorno;
+	}
+	
 	public Conta buscarConta(int numero) {
 		Conta out = null;
 		for(Conta conta: this.contas){

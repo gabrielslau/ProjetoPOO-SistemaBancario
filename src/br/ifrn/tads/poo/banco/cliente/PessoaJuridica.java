@@ -27,8 +27,4 @@ public class PessoaJuridica extends Cliente {
 		this.nomeFantasia = nomeFantasia;
 	}
 	
-	public String toString(){
-		return cnpj+" - "+super.getNome();
-	}
-
 }
