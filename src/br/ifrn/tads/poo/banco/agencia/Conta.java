@@ -6,7 +6,7 @@ public class Conta implements IConta {
 
 	protected final double TR = 0; // Taxa Referencial
 	protected final double TAXA = 0.50;
-
+	
 	protected int numero;
 	protected double saldo;
 	protected boolean ativa;
@@ -34,12 +34,19 @@ public class Conta implements IConta {
 	}
 	
 	public boolean sacar(double valor) {
-		if(this.saldo - valor < 0)
-			return false;
-		else{
-			this.saldo -= valor;
-			return true;
+		if(this.saldo - valor < 0){
+			if (this instanceof ContaCorrente){
+				// conta corrente - Checar o limite
+				if(this.saldo + this.getLimite() - valor < 0)
+					return false; // dinheiro insuficiente				
+			}else{			
+				// conta poupanca 
+				return false; // dinheiro insuficiente
+			}
 		}
+		
+		this.saldo -= valor;
+		return true;
 	}
 	
 	public void depositar(double valor) {
@@ -55,7 +62,15 @@ public class Conta implements IConta {
 	}
 	
 	public String toString(){
-		return "Numero: " + String.valueOf(this.numero) + "; Situacao: " + (this.ativa ? "Ativa" : "Desativada");
+		String Tipo = (this instanceof ContaCorrente) ? "Corrente" : "Poupança";
+		String Retorno = "";	
+		Retorno 	= "Numero: " + String.valueOf(this.numero);
+		Retorno 	+= "; Tipo " + Tipo + "; Saldo: " + this.saldo;
+		Retorno 	+= "; Situacao: " + (this.ativa ? "Ativa" : "Desativada");
+		if 	(this instanceof ContaCorrente){
+			Retorno 	+= "; Limite: " + this.getLimite();
+		}
+		return Retorno;
 	}
 	
 	public String verSituacaoConta(){
@@ -69,7 +84,16 @@ public class Conta implements IConta {
 	}
 	
 	public boolean transferirValor(Conta contadestino, double valor){
-		if(this.saldo - valor < 0) return false; // dinheiro insuficiente
+		if(this.saldo - valor < 0){
+			if (this instanceof ContaCorrente){
+				// conta corrente - Checar o limite
+				if(this.saldo + this.getLimite() - valor < 0)
+					return false; // dinheiro insuficiente
+			}else{
+				// conta poupanca 
+				return false; // dinheiro insuficiente
+			}
+		}
 		
 		this.sacar(valor);				// Sacar da conta atual
 		contadestino.depositar(valor);	// Depositar na conta destino
