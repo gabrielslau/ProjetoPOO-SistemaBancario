@@ -2,12 +2,14 @@ package br.ifrn.tads.poo.banco.agencia;
 
 import  java.util.Date;
 
+import br.ifrn.tads.poo.banco.cliente.Cliente;
+
 public class ContaPoupanca extends Conta {
 
 	private Date aniversario;
 
-	public ContaPoupanca(int numero) {
-		super(numero);
+	public ContaPoupanca(Cliente cliente, int numero) {
+		super(cliente, numero);
 		this.aniversario = new Date(); 
 		// o aniversário é criado no momento em que se cria uma nova conta
 	}

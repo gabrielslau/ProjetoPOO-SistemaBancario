@@ -1,11 +1,13 @@
 package br.ifrn.tads.poo.banco.agencia;
 
+import br.ifrn.tads.poo.banco.cliente.Cliente;
+
 public class ContaCorrente extends Conta {
 
 	public double limite;
 
-	public ContaCorrente(int numero, double limite) {
-		super(numero);
+	public ContaCorrente(Cliente cliente, int numero, double limite) {
+		super(cliente, numero);
 		this.limite = limite;
 	}
 
