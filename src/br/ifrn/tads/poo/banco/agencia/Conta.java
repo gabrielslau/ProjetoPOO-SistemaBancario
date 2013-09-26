@@ -39,24 +39,28 @@ public class Conta implements IConta {
 		return this.cliente.getNome();
 	}
 	
-	public boolean sacar(double valor) {
+	public void sacar(double valor) throws SaldoInsuficienteException{
 		if(this.saldo - valor < 0){
 			if (this instanceof ContaCorrente){
 				// conta corrente - Checar o limite
 				if(this.saldo + this.getLimite() - valor < 0)
-					return false; // dinheiro insuficiente				
+					throw new SaldoInsuficienteException();
 			}else{			
 				// conta poupanca 
-				return false; // dinheiro insuficiente
+				throw new SaldoInsuficienteException();
 			}
 		}
 		
 		this.saldo -= valor;
-		return true;
 	}
 	
 	public void depositar(double valor) {
-		this.saldo += valor;
+		if(valor < 0){
+			throw new IllegalArgumentException("Não é permitido inserir valores negativos");
+		}
+		else{
+			this.saldo += valor;
+		}
 	}
 	
 	public void cancelarConta() {
@@ -90,22 +94,20 @@ public class Conta implements IConta {
 		return 0;
 	}
 	
-	public boolean transferirValor(Conta contadestino, double valor){
+	public void transferirValor(Conta contadestino, double valor) throws SaldoInsuficienteException{
 		if(this.saldo - valor < 0){
 			if (this instanceof ContaCorrente){
 				// conta corrente - Checar o limite
 				if(this.saldo + this.getLimite() - valor < 0)
-					return false; // dinheiro insuficiente
+					throw new SaldoInsuficienteException();
 			}else{
 				// conta poupanca 
-				return false; // dinheiro insuficiente
+				throw new SaldoInsuficienteException();
 			}
 		}
 		
 		this.sacar(valor);				// Sacar da conta atual
 		contadestino.depositar(valor);	// Depositar na conta destino
-		
-		return true;
 	}
 	
 }

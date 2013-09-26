@@ -10,7 +10,7 @@ public interface IConta {
 	
 	public boolean isAtiva();
 	
-	public boolean sacar(double valor);
+	public void sacar(double valor) throws SaldoInsuficienteException;
 	
 	public void depositar(double valor);
 	
@@ -22,6 +22,6 @@ public interface IConta {
 	
 	public void mudarLimiteDeConta(double limite);
 	
-	public boolean transferirValor(Conta contadestino, double valor);
+	public void transferirValor(Conta contadestino, double valor) throws SaldoInsuficienteException;
 	
 }
