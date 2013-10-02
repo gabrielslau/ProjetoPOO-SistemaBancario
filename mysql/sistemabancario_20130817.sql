@@ -2,7 +2,8 @@
 SQLyog Ultimate - MySQL GUI v8.2 
 MySQL - 5.5.16 : Database - sistemabancario
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 

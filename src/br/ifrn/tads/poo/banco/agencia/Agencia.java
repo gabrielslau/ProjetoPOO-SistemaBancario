@@ -1,9 +1,7 @@
 package br.ifrn.tads.poo.banco.agencia;
 
 import  br.ifrn.tads.poo.banco.cliente.*;
-
 import  java.util.ArrayList;
-import java.util.HashMap;
 
 public class Agencia {
 
@@ -102,6 +100,17 @@ public class Agencia {
 		for(Conta conta: this.contas){
 			if( numero == conta.getNumero() ){
 				out = conta;
+				break;
+			}
+		}
+		return out;
+	}
+	
+	public Cliente buscarCliente(String email) {
+		Cliente out = null;
+		for(Cliente _cliente: this.clientes){
+			if( email == _cliente.getEmail() ){
+				out = _cliente;
 				break;
 			}
 		}

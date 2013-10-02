@@ -25,6 +25,12 @@ public class Banco {
 		return numero;
 	}
 	
+	/*
+	 * buscarAgencia
+	 * 
+	 * @param int numero : numero da agencia a buscar
+	 * @return Agencia
+	 */
 	public Agencia buscarAgencia(int numero) {
 		Agencia out = null;
 		for(Agencia agencia: this.agencias){
