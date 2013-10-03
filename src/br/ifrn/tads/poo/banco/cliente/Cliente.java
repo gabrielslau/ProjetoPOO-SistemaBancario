@@ -1,8 +1,12 @@
 package br.ifrn.tads.poo.banco.cliente;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
-import br.ifrn.tads.poo.banco.agencia.*;
+import br.ifrn.tads.poo.banco.agencia.Agencia;
+import br.ifrn.tads.poo.banco.agencia.Conta;
+import br.ifrn.tads.poo.banco.app.ConnectionFactory;
+
 
 public class Cliente implements ICliente {
 	/* 
@@ -10,19 +14,42 @@ public class Cliente implements ICliente {
 	 * So pode ser herdada por outras. Nao  
 	 * Nao pode ser instanciada diretamente 
 	*/
-	
+	private int id;
+	private int tiposcliente_id;
 	private String nome;
 	private String telefone;
 	private String email;
 	private ArrayList<Agencia> agencias; // Cliente hasMany Agencia
 	private ArrayList<Conta> contas;	 // Cliente hasMany Conta
-
+	
+	private Connection connection;
+	
 	public Cliente(String nome, String telefone, String email) {
 		this.nome = nome;
 		this.telefone = telefone;
 		this.email = email;
+		
+		this.connection = new ConnectionFactory().getConnection();
 	}
 	
+	// Usa-se para atualizar o objeto
+	public Cliente(int id, int tiposcliente_id, String nome, String telefone, String email){
+		this.id = id;
+		this.tiposcliente_id = tiposcliente_id;
+		this.nome = nome;
+		this.telefone = telefone;
+		this.email = email;
+		
+		this.connection = new ConnectionFactory().getConnection();
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getTelefone() {
 		return telefone;
 	}
@@ -44,9 +71,8 @@ public class Cliente implements ICliente {
 	}
 	
 	public String toString(){
-		String Tipo 	= (this instanceof PessoaFisica) ? "Pessoa Fisica" : "Pessoa Juridica";
-		String Retorno 	= "Nome: " + String.valueOf(this.nome) + "; Tipo: " + Tipo;		
-		return Retorno;
+		String Tipo = (this instanceof PessoaFisica) ? "Pessoa Fisica" : "Pessoa Juridica";		
+		return this.id + ", " + this.nome + ", " + Tipo;
 	}
 	
 	public Conta buscarConta(int numero) {
@@ -82,5 +108,7 @@ public class Cliente implements ICliente {
 		
 		return aux;
 	}
+
+	
 	
 }
