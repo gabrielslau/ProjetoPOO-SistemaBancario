@@ -96,4 +96,12 @@ public class Utils {
 		return (CPF.substring(0, 3) + "." + CPF.substring(3, 6) + "."
 				+ CPF.substring(6, 9) + "-" + CPF.substring(9, 11));
 	}
+	
+	public static String cut(String str, int length){
+		return str.substring(0, Math.min(str.length(), length));
+	}
+	public static String cut(String str){
+		int length = 0;
+		return str.substring(0, Math.min(str.length(), length));
+	}
 }

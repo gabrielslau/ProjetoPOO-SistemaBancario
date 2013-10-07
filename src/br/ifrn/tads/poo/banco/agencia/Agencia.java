@@ -20,12 +20,12 @@ public class Agencia {
 	private int id, numero;
 	private String nome, endereco, nome_gerente;
 	private Banco banco;
+	private Cliente cliente;
 	private ArrayList<Conta> contas;	 	// Agencia hasMany Conta -> Conta belongsTo Agencia
 	private ArrayList<Cliente> clientes;	// Agencia hasMany Cliente -> Cliente belongsTo Agencia
 	
 	public Agencia(int id, Banco banco, int numero, String nome, String endereco, String nome_gerente) {
 		this.id 			= id;
-		this.banco 			= banco;
 		this.numero 		= numero;
 		this.nome 			= nome;
 		this.endereco 		= endereco;
@@ -46,10 +46,10 @@ public class Agencia {
 		this.contas = new ArrayList<Conta>(); 		// habilita a adição de contas
 		this.clientes = new ArrayList<Cliente>(); 	// habilita a adição de clientes
 		
-		this.insert(banco, numero, nome, endereco, nome_gerente);
+		this.insert();
 	}
 	
-	private void insert(Banco banco, int numero, String nome, String endereco, String nome_gerente) throws SQLException{
+	private void insert() throws SQLException{
 		// como os campos são obrigatorios, aproveita para cadastrar automaticamente no BD
 		this.connection = new ConnectionFactory().getConnection();
 		
@@ -59,11 +59,11 @@ public class Agencia {
 		String sql = "INSERT INTO `agencias` (banco_id, numero, nome, endereco, nome_gerente) VALUES (?,?,?,?,?)";
 		PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		
-		stmt.setLong(1, banco.getId());
-		stmt.setLong(2, numero);
-		stmt.setString(3, nome);
-		stmt.setString(4, endereco);
-		stmt.setString(5, nome_gerente);
+		stmt.setLong(1, this.banco.getId());
+		stmt.setLong(2, this.numero);
+		stmt.setString(3, this.nome);
+		stmt.setString(4, this.endereco);
+		stmt.setString(5, this.nome_gerente);
 		//stmt.execute();
 		
 		int affectedRows = stmt.executeUpdate();
@@ -77,6 +77,15 @@ public class Agencia {
         } else {
             throw new SQLException("Creating user failed, no generated key obtained.");
         }
+	}
+	
+	public void delete() throws SQLException{
+		this.connection = new ConnectionFactory().getConnection();
+		String sql = "DELETE FROM agencias WHERE id = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		
+		stmt.setLong(1, this.id); 
+		stmt.execute();
 	}
 
 	public String toString(){
@@ -124,18 +133,15 @@ public class Agencia {
 		this.nome_gerente = nome_gerente;
 	}
 	
-	public void criarConta(Cliente cliente, int numConta, double limiteConta, String tipoConta) {
-		Conta novaconta = null;
-		
-		if(tipoConta.equalsIgnoreCase("corrente"))
-			novaconta = new ContaCorrente(cliente, numConta, limiteConta);			
-		else if(tipoConta.equalsIgnoreCase("poupanca"))
-			novaconta = new ContaPoupanca(cliente, numConta);
-		
-		this.contas.add(novaconta);	// Adicionar conta criada no meu array de contas
-		adicionarCliente(cliente); 	// Adicionar(ou nao) o cliente ao meu array de clients
+	public void criarContaCorrente(Cliente cliente, double limiteConta) throws SQLException {
+		this.contas.add(new ContaCorrente(this, cliente, limiteConta));
 	}
 	
+	public void criarContaPoupanca(Cliente cliente) throws SQLException {
+		this.contas.add(new ContaPoupanca(this, cliente));
+	}
+	
+	/*
 	public void adicionarCliente(Cliente clienteAdd) {
 		for(Cliente cliente: this.clientes){
 			if	(cliente.equals(clienteAdd)){
@@ -144,17 +150,47 @@ public class Agencia {
 		}
 		
 		this.clientes.add(clienteAdd); // Adicionar o cliente ao meu array de clients
+	}*/
+
+	
+	/**
+	 * Sincroniza os dados das contas com o database
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Conta> getContas() throws SQLException {
+		// tenta recuperar do banco de dados
+		if(contas.isEmpty()){
+			this.connection = new ConnectionFactory().getConnection();
+			Statement stm = connection.createStatement();
+
+			// seleciona as contas APENAS desta agencia
+			String sql = "SELECT conta.* FROM `contas` as conta LEFT JOIN `clientes` as cliente ON(cliente.id = conta.cliente_id) LEFT JOIN `agencias` as agencia ON (agencia.id = conta.agencia_id) WHERE conta.agencia_id = "+this.getId();			
+			
+			ResultSet result = stm.executeQuery(sql);
+	        while(result.next()){
+	            // TODO: ler mais informações dos Models associados ao cliente ???
+	        	
+	        	if( result.getInt("tiposconta_id") == 1 ){
+	        		// Suponho que não seja preciso verificar se o cliente está cadastrado na base local
+	        		contas.add(new ContaPoupanca(result.getInt("id"), this, this.buscarCliente(result.getInt("cliente_id")), result.getInt("numero"), result.getInt("saldo"), result.getDate("aniversario"), result.getBoolean("ativa")));
+	        	}else{
+	        		contas.add(new ContaCorrente(result.getInt("id"), this, this.buscarCliente(result.getInt("cliente_id")), result.getInt("numero"), result.getDouble("saldo"), result.getDouble("limite"), result.getBoolean("ativa")));
+	        	}
+	        }
+	        // TODO: fechar a conexão a cada consulta ou deixar persistente ???
+	        //connection.close();
+		}
+		
+		return contas;
 	}
 	
-	public String getContas() {
-		String retorno = "";
-		for(Conta conta: this.contas){
-			retorno += conta+"\n";	
-		}		
-        return retorno;
-	}
 	
-	// metodo "sync"
+	/**
+	 * Sincroniza os dados de clientes com o database
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Cliente> getClientes() throws SQLException {
 		// tenta recuperar do banco de dados
 		if(clientes.isEmpty()){
@@ -204,6 +240,17 @@ public class Agencia {
 		return out;
 	}
 	
+	public Cliente buscarCliente(String email) {
+		Cliente out = null;
+		for(Cliente _cliente: this.clientes){
+			if( email == _cliente.getEmail() ){
+				out = _cliente;
+				break;
+			}
+		}
+		return out;
+	}
+	
 	public String ListContasCliente(Cliente clienteList) {
 		// Listar todas as contas do cliente
 		String retorno = "";
@@ -214,5 +261,8 @@ public class Agencia {
 		}		
         return retorno;
 	}
-
+	
+	public Banco getBanco(){
+		return this.banco;
+	}
 }

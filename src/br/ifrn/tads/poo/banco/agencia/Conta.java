@@ -1,21 +1,34 @@
 package br.ifrn.tads.poo.banco.agencia;
 
+import java.sql.Connection;
+
 import br.ifrn.tads.poo.banco.cliente.Cliente;
 
 public class Conta implements IConta {
-
+	protected Connection connection;
+	
 	protected final double TR = 0; 		// Taxa Referencial
 	protected final double TAXA = 0.50;
 	
-	protected Cliente cliente; 
-	protected int numero;
+	protected Cliente cliente; // Conta belongsTo Cliente
+	protected Agencia agencia; // Conta belongsTo Agencia
+	protected int id, numero;
 	protected double saldo;
 	protected boolean ativa;
 	
-	public Conta(Cliente cliente, int numero) {
+	public Conta(Agencia agencia, Cliente cliente) {
+		this.agencia = agencia;
 		this.cliente = cliente;
-		this.numero = numero;
+		this.numero = new Double( Math.random() * 100000 ).intValue();
 		this.saldo  = 0;
+		this.ativa  = true;
+	}
+	
+	public Conta(Agencia agencia, Cliente cliente, double saldo) {
+		this.agencia = agencia;
+		this.cliente = cliente;
+		this.numero = new Double( Math.random() * 100000 ).intValue();
+		this.saldo  = saldo; // saldo inicial
 		this.ativa  = true;
 	}
 	
@@ -35,7 +48,11 @@ public class Conta implements IConta {
 		return ativa;
 	}
 	
-	public String getCliente() {
+	public Cliente getCliente() {
+		return this.cliente;
+	}
+	
+	public String getClienteName() {
 		return this.cliente.getNome();
 	}
 	

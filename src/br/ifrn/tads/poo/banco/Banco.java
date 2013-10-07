@@ -9,17 +9,16 @@ import java.util.ArrayList;
 
 import br.ifrn.tads.poo.banco.agencia.Agencia;
 import br.ifrn.tads.poo.banco.app.ConnectionFactory;
-import br.ifrn.tads.poo.banco.cliente.Cliente;
-import br.ifrn.tads.poo.banco.cliente.PessoaFisica;
-import br.ifrn.tads.poo.banco.cliente.PessoaJuridica;
+import br.ifrn.tads.poo.banco.app.tools.Utils;
+
 
 public class Banco {
-
+	
+	private Connection connection;
+	
 	private int id;
 	private int numero;	
 	private String 	nome;
-	
-	private Connection connection;
   
 	public int getId() {
 		return id;
@@ -52,17 +51,26 @@ public class Banco {
 		this.nome 	= nome;
 		this.agencias = new ArrayList<Agencia>();
 		
-		this.insert(numero, nome);
+		this.insert(this.numero, nome);
 	}
 	
 	private void insert(int numero, String nome) throws SQLException{
 		// como os campos são obrigatorios, aproveita para cadastrar automaticamente no BD
 		this.connection = new ConnectionFactory().getConnection();
-		String sql = "insert into bancos " +"(numero, nome) " +"values (?,?)";
+		String sql = "INSERT INTO bancos (numero, nome) VALUES (?,?)";
 		PreparedStatement stmt = connection.prepareStatement(sql);
 		
 		stmt.setLong(1, numero);
-		stmt.setString(2, nome.substring(0, 45));
+		stmt.setString(2, Utils.cut(nome, 45)); 
+		stmt.execute();
+	}
+	
+	public void delete() throws SQLException{
+		this.connection = new ConnectionFactory().getConnection();
+		String sql = "DELETE FROM bancos WHERE id = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		
+		stmt.setLong(1, this.id); 
 		stmt.execute();
 	}
 	
@@ -76,7 +84,6 @@ public class Banco {
 	
 	public String toString(){
 		return String.valueOf(this.id) + "; " + String.valueOf(this.numero) + "; " + String.valueOf(this.nome);
-		//return "ID: " + String.valueOf(this.id) + "; Numero: " + String.valueOf(this.numero) + "; Nome: " + String.valueOf(this.nome);
 	}
 	
 	/*
